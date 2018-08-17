@@ -15,8 +15,8 @@ function [enhanced_img, mask] = sharpen(img, n, k)
 	% unsharp masking
 	enhanced_img = uint8((img + k*mask)/(1+k));
 	
-	display([M,N,D]);
-	display(size(enhanced_img));
+% 	display([M,N,D]);
+% 	display(size(enhanced_img));
 	
 	% contrast enhancement
 	max_im = double(max(max(enhanced_img)));

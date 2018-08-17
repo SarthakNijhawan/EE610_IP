@@ -1,8 +1,17 @@
 einstein = imread('images/einstein.jpg');
+% ndims(einstein)
+
 barbara = imread('images/barbara.png');
+
 lena = imread('images/lena.png');
 baboon = imread('images/baboon.png');
 photo = imread('images/photo.jpeg');
 goldhill = imread('images/goldhill.bmp');
 
-blur(lena, 3, 1);
+
+if ndims(img) == 3
+    img_hsv = rgb2hsv(img);
+    img_intensity = img_hsv(:,:,3);
+else
+    img_intens
+end
