@@ -14,9 +14,9 @@ function [enhanced_img] = gamma_corr(orig_img, gamma)
 	end
 
 	L = 256;	        						% Number of levels
-	
-	h = double(img_val)/(L-1);          		% Scaling down the intensity values in the range [0,1]
-	h = power(h, gamma);                		% Applying the power law function
+
+	enhanced_img = double(img_val)/(L-1);		% Scaling down the intensity values in the range [0,1]
+	enhanced_img = power(enhanced_img, gamma);	% Applying the power law function
 	
 	if ndims(orig_img) == 3						% Colored Images
 		img_hsv(:,:,3) = enhanced_img;
@@ -32,4 +32,5 @@ function [enhanced_img] = gamma_corr(orig_img, gamma)
 	subplot(1,2,2)
 	imshow(enhanced_img);
 	title('Enhanced image');
+	
 end
