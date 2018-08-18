@@ -22,7 +22,7 @@ function varargout = GUI_1(varargin)
 
 % Edit the above text to modify the response to help GUI_1
 
-% Last Modified by GUIDE v2.5 19-Aug-2018 02:28:20
+% Last Modified by GUIDE v2.5 19-Aug-2018 03:18:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -96,7 +96,7 @@ function import_image(hObject, eventdata, handles)
 	handles.current_state = 1;
 	handles.state_stack = {};
 	handles.state_stack{handles.current_state} = handles.original_image;
-    guidata(hObject, handles);
+	guidata(hObject, handles);
 
 function gamma_correction(hObject, eventdata, handles)
 	
@@ -147,6 +147,7 @@ function rotation(hObject, eventdata, handles)
 	handles.current_state = handles.current_state + 1;
 	handles.state_stack{handles.current_state} = handles.edited_image;
 	guidata(hObject, handles);
+	
 	axes(handles.Edited_Image);
 	imshow(handles.edited_image);
 
@@ -193,7 +194,6 @@ function translation(hObject, eventdata, handles)
 
 function slider_blurness(hObject, eventdata, handles)
 
-
 	sliderVal1 = get(hObject,'Value');
 	blur_number = (sliderVal1+ 0.0001)*15;
 	n = 21;
@@ -215,7 +215,7 @@ function slider_blurness_CreateFcn(hObject, eventdata, handles)
 function slider_sharpness(hObject, eventdata, handles)
 
 
-function slider_sharpness_CreateFcn(hObject, eventdata, handles)
+function slider_sharpness_function(hObject, eventdata, handles)
 	if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
 		set(hObject,'BackgroundColor',[.9 .9 .9]);
 	end
@@ -227,19 +227,15 @@ function bit_plane_slicing(hObject, eventdata, handles)
 function adaptive_thresholding(hObject, eventdata, handles)
 %%% TODO
 
-% function (hObject, eventdata, handles)
-
-% function (hObject, eventdata, handles)
-
-% function (hObject, eventdata, handles)
 
 function save_editimage(hObject, eventdata, handles)
-%%% TODO
+
 	handles.current_state = handles.current_state + 1;
 	handles.state_stack{handles.current_state} = handles.edited_image;
 	guidata(hObject, handles);
 
 function undo(hObject, eventdata, handles)
+	
 	if handles.current_state >=2
 		handles.current_state = handles.current_state - 1;
 		handles.state_stack = handles.state_stack(1:handles.current_state);
@@ -248,3 +244,15 @@ function undo(hObject, eventdata, handles)
 		handles.edited_image = handles.state_stack{handles.current_state};
 		imshow(handles.edited_image);
 	end
+
+
+% --- Executes during object creation, after setting all properties.
+function slider2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end

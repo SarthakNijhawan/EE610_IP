@@ -26,11 +26,11 @@ function [enhanced_img] = gamma_corr(orig_img, gamma)
 	end
 
 	% Displaying Images	
-	subplot(1,2,1)
-	imshow(orig_img);
-	title('Original Image');
-	subplot(1,2,2)
-	imshow(enhanced_img);
-	title('Enhanced image');
+	% subplot(1,2,1)
+	% imshow(orig_img);
+	% title('Original Image');
+	% subplot(1,2,2)
+	% imshow(enhanced_img);
+	% title('Enhanced image');
 	
 end

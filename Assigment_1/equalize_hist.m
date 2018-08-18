@@ -47,11 +47,11 @@ function [enhanced_img] = equalize_hist(orig_img)
 	end
 
 	% Displaying Images	
-	subplot(1,2,1)
-	imshow(orig_img);
-	title('Original Image');
-	subplot(1,2,2)
-	imshow(enhanced_img);
-	title('Enhanced image');
+	% subplot(1,2,1)
+	% imshow(orig_img);
+	% title('Original Image');
+	% subplot(1,2,2)
+	% imshow(enhanced_img);
+	% title('Enhanced image');
 	
 end

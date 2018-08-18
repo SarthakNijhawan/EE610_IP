@@ -6,10 +6,10 @@ function blurred_img = gauss_blur(orig_img, n, sig)
 	blurred_img = filter_image(orig_img, filt2D);
 
 	% Displaying the images
-	subplot(1,2,1)
-	imshow(orig_img);
-	title('Original Image');
-	subplot(1,2,2)
-	imshow(blurred_img);
-	title('Enhanced image');
+	% subplot(1,2,1)
+	% imshow(orig_img);
+	% title('Original Image');
+	% subplot(1,2,2)
+	% imshow(blurred_img);
+	% title('Enhanced image');
 end

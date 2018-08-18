@@ -46,15 +46,15 @@ function [enhanced_img] = hist_spec(original_img, reference_img)
     
 	enhanced_img = transform_func(original_img+1);
 
-	% Displaying images
-	subplot(1,3,1);
-	imshow(original_img);
-	title('Original Image');
-	subplot(1,3,2)
-	imshow(reference_img);
-	title('Mask');
-	subplot(1,3,3);
-	imshow(enhanced_img);
-	title('Enhanced image');
+	% % Displaying images
+	% subplot(1,3,1);
+	% imshow(original_img);
+	% title('Original Image');
+	% subplot(1,3,2)
+	% imshow(reference_img);
+	% title('Mask');
+	% subplot(1,3,3);
+	% imshow(enhanced_img);
+	% title('Enhanced image');
 
 end

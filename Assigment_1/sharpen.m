@@ -45,14 +45,14 @@ function [enhanced_img] = sharpen(orig_img, n, sig, k)
 	end
 	
 	% Displaying images
-	subplot(1,3,1);
-	imshow(orig_img);
-	title('Original Image');
-	subplot(1,3,2)
-	imshow(mask);
-	title('Mask');
-	subplot(1,3,3);
-	imshow(enhanced_img);
-	title('Enhanced image');
+	% subplot(1,3,1);
+	% imshow(orig_img);
+	% title('Original Image');
+	% subplot(1,3,2)
+	% imshow(mask);
+	% title('Mask');
+	% subplot(1,3,3);
+	% imshow(enhanced_img);
+	% title('Enhanced image');
 	
 end

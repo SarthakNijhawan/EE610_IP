@@ -45,15 +45,15 @@ function [] = idft2D(orig_img)
 	phase = uint8(255*phase/max(max(phase)));
 
 	% Displaying the images
-	subplot(1,3,1);
-	imshow(orig_img);
-	title('Original Image');
-	subplot(1,3,2)
-	imshow(mag);
-	title('Magnitude Plot');
-	subplot(1,3,3);
-	imshow(phase);
-	title('Phase Plot');
+	% subplot(1,3,1);
+	% imshow(orig_img);
+	% title('Original Image');
+	% subplot(1,3,2)
+	% imshow(mag);
+	% title('Magnitude Plot');
+	% subplot(1,3,3);
+	% imshow(phase);
+	% title('Phase Plot');
 
 	toc
 	
