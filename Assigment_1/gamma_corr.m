@@ -20,7 +20,7 @@ function [enhanced_img] = gamma_corr(orig_img, gamma)
 	
 	if ndims(orig_img) == 3						% Colored Images
 		img_hsv(:,:,3) = enhanced_img;
-		enhanced_img = hsv2rgb(img_hsv);
+		enhanced_img = uint8(255*hsv2rgb(img_hsv));
 	else 										% Grayscale Images
 		enhanced_img = uint8(255*enhanced_img);	% Rescaling the 
 	end

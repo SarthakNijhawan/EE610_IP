@@ -22,7 +22,7 @@ function varargout = GUI_1(varargin)
 
 % Edit the above text to modify the response to help GUI_1
 
-% Last Modified by GUIDE v2.5 19-Aug-2018 03:18:45
+% Last Modified by GUIDE v2.5 19-Aug-2018 03:59:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -140,10 +140,14 @@ function save_image(hObject, eventdata, handles)
 	imwrite(handles.handles.state_stack{handles.current_state}, complete_name);
 
 
-function rotation(hObject, eventdata, handles)
+function rotate(hObject, eventdata, handles)
 
-	angle = str2double(inputdlg('Enter the angle in degrees','Angle-Theta',1,{'0'}));       %dialog box for angle of rotation
-	handles.edited_image = rotate_img(handles.state_stack{handles.current_state}, angle);
+	angle_deg = str2double(inputdlg('Enter the angle in degrees','Angle-Theta',1,{'0'}));       %dialog box for angle of rotation
+	
+	% axes(handles.Original_Image);
+	% imshow(handles.state_stack{handles.current_state});
+
+	handles.edited_image = rotate_img(handles.state_stack{handles.current_state}, angle_deg);
 	handles.current_state = handles.current_state + 1;
 	handles.state_stack{handles.current_state} = handles.edited_image;
 	guidata(hObject, handles);
@@ -242,9 +246,12 @@ function undo(hObject, eventdata, handles)
 		guidata(hObject, handles);
 
 		handles.edited_image = handles.state_stack{handles.current_state};
+		axes(handles.Edited_Image);
 		imshow(handles.edited_image);
 	end
 
+	axes(handles.Original_Image);
+	imshow(handles.original_image);
 
 % --- Executes during object creation, after setting all properties.
 function slider2_CreateFcn(hObject, eventdata, handles)
@@ -256,3 +263,10 @@ function slider2_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in pushbutton17.
+function shear(hObject, eventdata, handles)
+% hObject    handle to pushbutton17 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

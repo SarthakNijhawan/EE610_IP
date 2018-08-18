@@ -18,7 +18,7 @@ function [enhanced_img] = log_transform(orig_img)
 	
 	if ndims(orig_img) == 3						% Colored Images
 		img_hsv(:,:,3) = enhanced_img/255.0;	% range for V in HSV must be in [0,1]
-		enhanced_img = hsv2rgb(img_hsv);
+		enhanced_img = uint8(255*hsv2rgb(img_hsv));
 	else 										% Grayscale Images
 		enhanced_img = uint8(enhanced_img);		% Casting the image back for b/w images
 	end
