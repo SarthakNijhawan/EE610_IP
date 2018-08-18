@@ -22,27 +22,26 @@ function varargout = GUI_1(varargin)
 
 % Edit the above text to modify the response to help GUI_1
 
-% Last Modified by GUIDE v2.5 18-Aug-2018 22:57:02
+% Last Modified by GUIDE v2.5 19-Aug-2018 02:28:20
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @GUI_1_OpeningFcn, ...
-                   'gui_OutputFcn',  @GUI_1_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+				   'gui_Singleton',  gui_Singleton, ...
+				   'gui_OpeningFcn', @GUI_1_OpeningFcn, ...
+				   'gui_OutputFcn',  @GUI_1_OutputFcn, ...
+				   'gui_LayoutFcn',  [] , ...
+				   'gui_Callback',   []);
 if nargin && ischar(varargin{1})
-    gui_State.gui_Callback = str2func(varargin{1});
+	gui_State.gui_Callback = str2func(varargin{1});
 end
 
 if nargout
-    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+	[varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
 else
-    gui_mainfcn(gui_State, varargin{:});
+	gui_mainfcn(gui_State, varargin{:});
 end
 % End initialization code - DO NOT EDIT
-
 
 % --- Executes just before GUI_1 is made visible.
 function GUI_1_OpeningFcn(hObject, eventdata, handles, varargin)
@@ -72,298 +71,180 @@ function varargout = GUI_1_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
+%%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
+%%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
+%%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
 
-% --- Executes on button press in pushbutton6.
-function pushbutton6_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% Import an image
+function import_image(hObject, eventdata, handles)
 
+	% All files are allowed
+	[File_Name, Path_Name] = uigetfile('*.*','File Selector');
+	image_path = strcat(Path_Name, File_Name);
+	
+	% Loading the image
+	handles.edited_image = imread(image_path);
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+	
+	handles.original_image = imread(image_path);
+	guidata(hObject, handles);
+	axes(handles.Original_Image)
+	imshow(handles.original_image);
 
-% --- Executes on button press in radiobutton7.
-function radiobutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+	% Creating a Cellular Array for storing the state of the images
+	handles.current_state = 1;
+	handles.state_stack = {};
+	handles.state_stack{handles.current_state} = handles.original_image;
+    guidata(hObject, handles);
 
-% Hint: get(hObject,'Value') returns toggle state of radiobutton7
+function gamma_correction(hObject, eventdata, handles)
+	
+	gamma_value = str2double(inputdlg('Gamma value(0.01 - 10)','Gamma',1,{'1'}));
+	% handles.Gamma_value = Gamma_value;
+	handles.edited_image = gamma_corr(handles.state_stack{handles.current_state}, gamma_value);
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
 
-
-% --- Executes on button press in radiobutton8.
-function radiobutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton8 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton8
-
-
-% --- Executes on button press in radiobutton3.
-function radiobutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton3
-
-
-% --- Executes on button press in radiobutton4.
-function radiobutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton4
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
 
 
-% --- Executes on slider movement.
-function slider1_Callback(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                    %%change the range
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function histogram_equalization(hObject, eventdata, handles)
+	
+	handles.edited_image = equalize_hist(handles.state_stack{handles.current_state});
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
 
-sliderVal1 = get(hObject,'Value');
-blur_number = (sliderVal1+0.0001)*15;
-n = 21;
-handles.editimage = blur(handles.originalimage, n, blur_number);
-guidata(hObject,handles);
-axes(handles.Edited_Image);
-imshow(handles.editimage);
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+
+
+function log_transformation(hObject, eventdata, handles)
+	
+	handles.edited_image = log_transform(handles.state_stack{handles.current_state});
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+
+
+function save_image(hObject, eventdata, handles)
+
+	[filename, foldername] = uiputfile('.jpg','File Selector');
+	complete_name = fullfile(foldername, filename);
+	imwrite(handles.handles.state_stack{handles.current_state}, complete_name);
+
+
+function rotation(hObject, eventdata, handles)
+
+	angle = str2double(inputdlg('Enter the angle in degrees','Angle-Theta',1,{'0'}));       %dialog box for angle of rotation
+	handles.edited_image = rotate_img(handles.state_stack{handles.current_state}, angle);
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+
+
+function reset_Callback(hObject, eventdata, handles)
+
+	handles.edited_image = handles.original_image;
+	handles.current_state = 1;
+	handles.state_stack = {};
+	handles.state_stack{handles.current_state} = handles.original_image;
+
+	set(handles.slider1,'Value',0);
+	set(handles.slider2,'Value',0);
+	guidata(hObject,handles);
+
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+
+
+function exit(hObject, eventdata, handles)
+
+	clc;
+	clf;
+	% clear the variables
+	clearStr = 'clear all';
+	evalin('base',clearStr);
+	% delete figures
+	delete(handles.Original_Image);
+	delete(handles.Edited_Image);
+	close(gcf);
+
+
+function translation(hObject, eventdata, handles)
+
+	coordinate = str2double(inputdlg({'x-coordinate in pixels','y-coordinate in pixels'},'coordinates',1,{'0','0'}));
+	handles.edited_image = translate_img(handles.state_stack{handles.current_state}, coordinate(1), coordinate(2));
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+
+
+function slider_blurness(hObject, eventdata, handles)
+
+
+	sliderVal1 = get(hObject,'Value');
+	blur_number = (sliderVal1+ 0.0001)*15;
+	n = 21;
+	handles.edited_image = gauss_blur(handles.state_stack{handles.current_state}, n, blur_number);
+	guidata(hObject,handles);
+
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
+function slider_blurness_CreateFcn(hObject, eventdata, handles)
+	if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+		set(hObject,'BackgroundColor',[.9 .9 .9]);
+	end
 
 
-% --- Executes during object creation, after setting all properties.
-function slider1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
+function slider_sharpness(hObject, eventdata, handles)
 
 
-% --- Executes on slider movement.
-function slider2_Callback(hObject, eventdata, handles)
-% hObject    handle to slider2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+function slider_sharpness_CreateFcn(hObject, eventdata, handles)
+	if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+		set(hObject,'BackgroundColor',[.9 .9 .9]);
+	end
 
 
-% --- Executes during object creation, after setting all properties.
-function slider2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
+function bit_plane_slicing(hObject, eventdata, handles)
+%%% TODO
 
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
+function adaptive_thresholding(hObject, eventdata, handles)
+%%% TODO
 
+% function (hObject, eventdata, handles)
 
-% --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% function (hObject, eventdata, handles)
 
+% function (hObject, eventdata, handles)
 
-% --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+function save_editimage(hObject, eventdata, handles)
+%%% TODO
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
 
+function undo(hObject, eventdata, handles)
+	if handles.current_state >=2
+		handles.current_state = handles.current_state - 1;
+		handles.state_stack = handles.state_stack(1:handles.current_state);
+		guidata(hObject, handles);
 
-% --- Executes on button press in pushbutton4.
-function pushbutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in pushbutton5.
-function pushbutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in checkbox2.
-function checkbox2_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox2
-
-
-% --- Executes on button press in ImportImage.
-function ImportImage_Callback(hObject, eventdata, handles)
-% hObject    handle to ImportImage (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% code for importing a image 
-[File_Name, Path_Name] = uigetfile('*.*','File Selector');
-       image_name = strcat(Path_Name,File_Name);
-       editimage = imread(image_name);
-       handles.editimage = editimage;
-       guidata(hObject, handles);
-       axes(handles.Edited_Image);
-       imshow(editimage);
-       originalimage = imread(image_name);
-       handles.originalimage = originalimage;
-       guidata(hObject, handles);
-       axes(handles.Original_Image)
-       imshow(editimage);
-       
-% --- Executes on button press in pushbutton8.
-function pushbutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton8 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-%save the image to a desired destination
-[filename, foldername] = uiputfile('.jpg','File Selector');
-complete_name = fullfile(foldername, filename);
-imwrite(handles.editimage, complete_name);
-
-
-% --- Executes on button press in pushbutton9.
-function pushbutton9_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in pushbutton10.
-function pushbutton10_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    handles.editimage = handles.originalimage;
-    set(handles.slider1,'Value',0);
-    set(handles.slider2,'Value',0);
-    guidata(hObject,handles);
-    axes(handles.Edited_Image);
-    imshow(handles.editimage);
-        
-
-
-
-
-% --- Executes on button press in pushbutton11.
-function pushbutton11_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton11 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% clear the command window
-clc;
-clf;
-% clear the variables
-clearStr = 'clear all';
-evalin('base',clearStr);
-%delete figures
-delete(handles.Original_Image);
-delete(handles.Edited_Image);
-close(gcf);
-
-
-% --- Executes on button press in radiobutton9.
-function radiobutton9_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton9
-
-
-% --- Executes on button press in radiobutton10.
-function radiobutton10_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton10
-
-
-% --- Executes during object creation, after setting all properties.
-function pushbutton10_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to pushbutton10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-
-%--- Executes on button press in radiobutton12.
-function radiobutton12_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton12
-
-
-% --- Executes on button press in pushbutton12.
-function pushbutton12_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    angle = str2double(inputdlg('Enter the angle in degrees','Angle-Theta',1,{'0'}));       %dialog box for angle of rotation
-    handles.editimage = rotate_img(handles.editimage,angle);
-    guidata(hObject,handles);
-    axes(handles.Edited_Image);
-    imshow(handles.editimage);
-
-
-function pushbutton13_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    coordinate = str2double(inputdlg({'x-coordinate in pixels','y-coordinate in pixels'},'coordinates',1,{'0','0'}));
-    handles.editimage = translate_img(handles.editimage,coordinate(1),coordinate(2));
-    guidata(hObject,handles);
-    axes(handles.Edited_Image);
-    imshow(handles.editimage);
-
-
-% --- Executes on button press in pushbutton14.
-function pushbutton14_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton14 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    handles.editimage = equalize_hist(handles.editimage);
-    guidata(hObject,handles);
-    axes(handles.Edited_Image);
-    imshow(handles.editimage);
-
-% --- Executes on button press in pushbutton15.
-function pushbutton15_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton15 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    Gamma_value = str2double(inputdlg('Gamma value(0.01 - 10)','Gamma',1,{'1'}));
-    handles.Gamma_value = Gamma_value;
-    handles.editimage = gamma_corr(handles.editimage,handles.Gamma_value);
-    guidata(hObject,handles);
-    axes(handles.Edited_Image);
-    imshow(handles.editimage);
-
-% --- Executes on button press in pushbutton16.
-function pushbutton16_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton16 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    handles.editimage = log_transform(handles.editimage);
-    guidata(hObject,handles);
-    axes(handles.Edited_Image);
-    imshow(handles.editimage);
+		handles.edited_image = handles.state_stack{handles.current_state};
+		imshow(handles.edited_image);
+	end
