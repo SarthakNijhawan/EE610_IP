@@ -1,4 +1,4 @@
-function [enhanced_img] = blur(orig_img, n, sig)
+function [enhanced_img] = filter_image(orig_img, filt2D)
 	% Input Parameters:
 	%		orig_img 	-> 	Original Input Image
 	%		n 			-> 	Size of the input filter
@@ -15,11 +15,9 @@ function [enhanced_img] = blur(orig_img, n, sig)
 	end
 	
 	[M,N] = size(img_val);
-
+    [n,n] = size(filt2D);
+    
 	ext = (n-1)/2;        	              		% Is an integer for odd n's
-
-	% Guassian kernel in 2D
-	filt2D = double(gauss2D(n, sig, sig));
 
 	% Zero-paddings in both dimensions
 	pad_img = padarray(img_val, [ext, ext], 0);
@@ -40,12 +38,5 @@ function [enhanced_img] = blur(orig_img, n, sig)
 		enhanced_img = uint8(enhanced_img);		% Casting the image into 8-bit integers
 	end
 
-	% Displaying the images
-	subplot(1,2,1)
-	imshow(orig_img);
-	title('Original Image');
-	subplot(1,2,2)
-	imshow(enhanced_img);
-	title('Enhanced image');
 end
 

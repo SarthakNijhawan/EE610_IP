@@ -1,6 +1,7 @@
 function [Rotated_img] = rotate_img(im,theta)
-img = im;
-A=imread(img);
+% img = im;
+% A=imread(img);
+A = im;
 
 x1=zeros([size(A,1)*size(A,2) 1]);
 x2=zeros([size(A,2)*size(A,1) 1]);

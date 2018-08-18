@@ -1,4 +1,4 @@
-function [enhanced_img] = sharpen(orig_img, n, k)
+function [enhanced_img] = sharpen(orig_img, n, sig, k)
 	% Input Parameters:
 	%		orig_img 	-> 	Original Input Image
 	%		n 			-> 	size of filter used for blurring
@@ -16,20 +16,26 @@ function [enhanced_img] = sharpen(orig_img, n, k)
 	
 	[M,N] = size(img_val);
 
-	blur_img = blur(img_val, n, 5);
+	%% Sharpening Algo
+	identity_mask = zeros(n);
+	identity_mask((n+1)/2,(n+1)/2) = 1;
 
-	% mask used for sharpening
-	mask = double(img_val)-double(blur_img);
-	img_val = double(img_val);
+	% "mask" Acts a High Pass Filter
+	% mask_filter = identity_mask - gauss2D(n, sig, sig);
+	mask_filter = identity_mask - box2D(n);
+	
+	% Applying the mask
+	mask = double(filter_image(img_val, mask_filter));
+	mask = double(255*(mask > mean(mean(mask))));
 
-	% unsharp masking
-	enhanced_img = (img_val + k*mask)/(1+k);
-	
-	% contrast enhancement
-	max_im = double(max(max(enhanced_img)));
-	min_im = double(min(min(enhanced_img)));
-	
-	enhanced_img = 255*(double(enhanced_img) - min_im*ones(M,N))/(max_im-min_im);
+	% Unsharp masking
+	enhanced_img = (1-k)*double(img_val) + k*mask;
+	% enhanced_img = adapthisteq(enhanced_img);	
+
+	% contrast enhancement of mask
+	% max_im = double(max(max(enhanced_img)));
+	% min_im = double(min(min(enhanced_img)));
+	% enhanced_img = 255*(double(enhanced_img) - min_im*ones(M,N))/(max_im-min_im);
 
 	if ndims(orig_img) == 3						% Colored Images
 		img_hsv(:,:,3) = enhanced_img/255.0;	% range for V in HSV must be in [0,1]
