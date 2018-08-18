@@ -1,27 +1,37 @@
-function [rotated_img] = rotate_img(im,theta)
-A = im;
-%A=imread(img);
+function [rotated_img] = rotate_img(orig_img,theta)
+    
+    [M,N,C] = size(orig_img);                     % Assuming Black and white
+    rotated_img = zeros(M,N,C);
 
-rotated_img = zeros(size(A));
+    %Specify the degree
+    rad = theta*pi/180;
 
-%Specify the degree
-rad = theta*pi/180;
+    midx = round(M/2);
+    midy = round(N/2);
 
-midx = size(A,1);
-midy = size(A,2);
+    for i=1:M
+        for j=1:N             
+             % Rotating each coordinate w.r.t the center of the image
+             x = (i-midx)*cos(rad)-(j-midy)*sin(rad);       % Center is assumed to be (midx, midy)
+             y = (i-midx)*sin(rad)+(j-midy)*cos(rad);
+             x = round(x) + midx;
+             y = round(y) + midy;
 
-for i=1:size(A,1)
-    for j=1:size(A,2)
-
-         x=(i)*cos(rad)+(j)*sin(rad);
-         y= -(i)*sin(rad)+(j)*cos(rad);
-         x=round(x)+midx;
-         y=round(y)+midy;
-
-         if (x>=1 && y>=1 && x<=size(A,2) && y<=size(A,1))
-              rotated_img(x,y)=A(i,j);          
-         end
+             if (x>=1 && y>=1 && x<=M && y<=N)
+                 if C == 1
+                    rotated_img(i,j) = orig_img(x,y);
+                 else
+                    rotated_img(i,j,:) = orig_img(x,y,:);
+                 end
+             end
+        end
     end
+    
+    rotated_img = uint8(rotated_img);
+    
+    %subplot(1,2,1)
+    %imshow(orig_img);
+    %subplot(1,2,2)
+    %imshow(rotated_img);
+    
 end
-
-imshow(rotated_img);
