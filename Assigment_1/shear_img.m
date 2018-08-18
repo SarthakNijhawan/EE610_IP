@@ -1,4 +1,4 @@
-function [sheared_img] = shear_img(orig_img,alpha,beta)
+function [sheared_img] = shear_img(orig_img, alpha, beta)
 	
 	[M,N,C] = size(orig_img);                     % Assuming Black and white
 	sheared_img = zeros(M,N,C);
