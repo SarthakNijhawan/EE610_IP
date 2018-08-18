@@ -1,12 +1,19 @@
 function [spliced_img] = bitplane_splicing(orig_img)
 	
-    [M,N] = size(orig_img);     %size of original image
+    if ndims(orig_img) == 3						% Colored Images
+            img_hsv = rgb2hsv(orig_img);
+            img_val = 255.0*img_hsv(:,:,3);			% To ensure range of value is in mapped to [0,255]
+        else
+            img_val = orig_img;						% Grayscale Images
+    end
+    
+    [M,N] = size(img_val);     %size of original image
 	bit = zeros(M,N,8);         
 
 	for i=1:M
 		for j=1:N
 			k = 0;
-			num = orig_img(i,j);
+			num = img_val(i,j);
 			while(num>0)
 				k=k+1;
 				bit(i,j,k) = uint8(num/2) - uint8((num-1)/2);
