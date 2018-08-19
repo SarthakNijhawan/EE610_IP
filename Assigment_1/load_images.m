@@ -12,17 +12,11 @@ sharp = imread('images/sharp.png');
 lena_bw = rgb2gray(lena);
 einstein_bw = rgb2gray(einstein);
 
-adap_thresh = imread('images/adap_thresh.png');
-adap_thresh = rgb2gray(adap_thresh);
 adap_thresh2 = imread('images/adap_thresh2.png');
 adap_thresh2 = rgb2gray(adap_thresh2);
 adap_thresh3 = imread('images/adap_thresh3.png');
 % adap_thresh3 = rgb2gray(adap_thresh3);
 
 adap_thresh4 = imread('images/adap_thresh4.jpg');
-% adap_thresh4 = rgb2gray(adap_thresh4);
 
-% img = rgb2gray(einstein);
-% img2 = rgb2gray(hist_eq3);
 
-% blur(lena, 3, 1);

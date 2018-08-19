@@ -22,7 +22,7 @@ function varargout = GUI_1(varargin)
 
 % Edit the above text to modify the response to help GUI_1
 
-% Last Modified by GUIDE v2.5 19-Aug-2018 05:06:18
+% Last Modified by GUIDE v2.5 19-Aug-2018 23:48:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -137,7 +137,7 @@ function save_image(hObject, eventdata, handles)
 
 	[filename, foldername] = uiputfile('.jpg','File Selector');
 	complete_name = fullfile(foldername, filename);
-	imwrite(handles.handles.state_stack{handles.current_state}, complete_name);
+	imwrite(handles.state_stack{handles.current_state}, complete_name);
 
 
 function rotate(hObject, eventdata, handles)
