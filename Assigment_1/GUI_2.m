@@ -22,7 +22,7 @@ function varargout = GUI_1(varargin)
 
 % Edit the above text to modify the response to help GUI_1
 
-% Last Modified by GUIDE v2.5 19-Aug-2018 05:06:18
+% Last Modified by GUIDE v2.5 19-Aug-2018 13:51:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -292,11 +292,21 @@ function slider2_CreateFcn(hObject, eventdata, handles)
 
 % Hint: slider controls usually have a light gray background.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
+	set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 
 function calculate_dft(hObject, eventdata, handles)
 	handles.dft = dft2D(handles.state_stack{handles.current_state});
+
+% 	image = handles.state_stack{handles.current_state};
+% 	
+% 	img_val = image;
+% 	if ndims(image) == 3
+% 		hsv_img = rgb2hsv(image);
+% 		img_val = uint8(255*hsv_img(:,:,3));
+%     end	
+% 	handles.dft = fftshift(fft2(img_val));
+	
 	handles.current_state = handles.current_state + 1;
 	handles.edited_image = abs(handles.dft);
 	handles.edited_image = uint8(255*handles.edited_image/max(max(handles.edited_image)));
