@@ -1,31 +1,36 @@
 function [spliced_img] = bitplane_splicing(orig_img, plane_num)
-	
-	if ndims(orig_img) == 3						% Colored Images
+	% Input:
+	%       orig_img    -> Original Input Image
+	% 		plane_num 	-> Plane number to be shown (must be in the range 1-8) 
+	%
+	% Output:
+	%		thresh_img 	-> Binary image 
+	%
+	% Description:  
+	%		: All the operations are performed on the variable "img_intensity"
+	%       : For colored images the same algorithm is performed on the Value(V) plane in HSV
+	%		: n must be an odd integer
+
+	if ndims(orig_img) == 3									% Colored Images
 			img_hsv = rgb2hsv(orig_img);
-			img_val = 255.0*img_hsv(:,:,3);			% To ensure range of value is in mapped to [0,255]
+			img_intensity = 255.0*img_hsv(:,:,3);			% To ensure range of value is in mapped to [0,255]
 		else
-			img_val = orig_img;						% Grayscale Images
+			img_intensity = orig_img;						% Grayscale Images
 	end
 	
-	plane_num = round(plane_num);
-	
-	[M,N] = size(img_val);     %size of original image
-	bit = zeros(M,N,8);         
+	plane_num = round(plane_num);							% To ensure plane number is an integer
+	[M,N] = size(img_intensity);     						% size of original image				
 
-	for i=1:M
-		for j=1:N
-			k = 0;
-			num = img_val(i,j);
-			while(num>0)
-				k=k+1;
-				bit(i,j,k) = uint8(num/2) - uint8((num-1)/2);
-				num = uint8((num-1)/2);
-			end
-		end
+	% Segregation of bit planes from the image (MSB:1 LSB:8)
+	bit = zeros(M,N,8);
+	temp_img = uint8(img_intensity);						% Ensures the image intensities lie in the range of 8-bits
+	for i = 1:8
+		bit(:,:,9-i) = mod(temp_img, 2);
+		temp_img = temp_img/2;
 	end
 
-	spliced_img = 255*bit;
-	spliced_img = uint8(spliced_img(:,:,plane_num));
+	% output plane
+	spliced_img = uint8(255*bit(:, :, plane_num));
 
 	% subplot(241)
 	% imshow(spliced_img(:,:,1));

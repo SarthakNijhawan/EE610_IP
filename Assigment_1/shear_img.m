@@ -1,15 +1,26 @@
 function [sheared_img] = shear_img(orig_img, alpha, beta)
-	
-	[M,N,C] = size(orig_img);                     % Assuming Black and white
-	sheared_img = zeros(M,N,C);
+	% Input:
+	%       orig_img    -> Input Image
+	%       alpha       -> Shear in x-direction
+	%       beta        -> Shear in y-direction
+	%
+	% Output:
+	%       sheared_img -> Sheared version of the input image 
+	%
+	% Description:
+	%       : Returns the Sheared image about the center of the image
 
+	[M,N,C] = size(orig_img);
+
+	% Shearing Algo
+	sheared_img = zeros(M,N,C);
 	midx = round(M/2);
 	midy = round(N/2);
 
 	for i=1:M
-		for j=1:N             
+		for j=1:N
 			 % shifting each coordinate w.r.t the center of the image
-			 x1 = (i-midx) + alpha*(j-midy);    %shifting the origin to center of image  
+			 x1 = (i-midx) + alpha*(j-midy);    % shifting the origin to center of image  
 			 y1 = (j-midy) + beta*(i-midx);
 			 x1 = round(x1) + midx;
 			 y1 = round(y1) + midy;

@@ -3,7 +3,8 @@ function [enhanced_img] = gamma_corr(orig_img, gamma)
 	%		orig_img 	-> 	Original Input Image
 	%		gamma 		-> 	Gamma value
 	% 
-	% Note	: all the operations are performed on the variable "img_val"
+	% Description:
+	%		: all the operations are performed on the variable "img_val"
 	%		: for the intensities are first mapped to [0,1] and then the law is applied to ensure final range to be [0,1]
 
 	if ndims(orig_img) == 3						% Colored Images

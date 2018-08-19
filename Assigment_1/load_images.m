@@ -19,4 +19,6 @@ adap_thresh3 = imread('images/adap_thresh3.png');
 
 adap_thresh4 = imread('images/adap_thresh4.jpg');
 
+dft = imread('images/dft1.png');
+dft = rgb2gray(dft);
 

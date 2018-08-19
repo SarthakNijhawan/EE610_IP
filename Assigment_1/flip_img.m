@@ -1,11 +1,17 @@
 function [mirrored_img] = mirror_img(orig_img)
-	
-	[M,N,C] = size(orig_img);                     % Assuming Black and white
-	mirrored_img = zeros(M,N,C);
+	% Input:
+	%       orig_img    -> Original Input Image
+	%
+	% Output:
+	%		mirrored_img-> Mirrored Image about the vertical Axis 
 
+	[M,N,C] = size(orig_img);
+
+	% Mirroring Algorithm
+	mirrored_img = zeros(M,N,C);
 	for i=1:M
 		for j=1:N             
-			 % Rotating each coordinate w.r.t the center of the image
+			 % Flipping each coordinate
 			 x1 = i ;
 			 y1 = N - j;
 			 

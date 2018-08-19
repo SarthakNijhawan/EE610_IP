@@ -87,7 +87,7 @@ function import_image(hObject, eventdata, handles)
 	axes(handles.Edited_Image);
 	imshow(handles.edited_image);
 	
-	handles.original_image = imread(image_path);
+	handles.original_image = handles.edited_image;
 	guidata(hObject, handles);
 	axes(handles.Original_Image)
 	imshow(handles.original_image);
@@ -194,7 +194,7 @@ function translation(hObject, eventdata, handles)
 
 
 function bit_plane_slicing(hObject, eventdata, handles)
-	plane_number = str2double(inputdlg({'Plane Number (MSB:8 LSB:1)'}, 'Plane Number', 1, {'8'}));
+	plane_number = str2double(inputdlg({'Plane Number (MSB:1 LSB:8)'}, 'Plane Number', 1, {'1'}));
 	handles.edited_image = bitplane_splicing(handles.state_stack{handles.current_state}, plane_number);
 	handles.current_state = handles.current_state + 1;
 	handles.state_stack{handles.current_state} = handles.edited_image;
@@ -205,8 +205,8 @@ function bit_plane_slicing(hObject, eventdata, handles)
 
 function adaptive_thresholding(hObject, eventdata, handles)
 
-	% plane_number = str2double(inputdlg({'Plane Number (MSB:8 LSB:1)'}, 'Plane Number', 1, {'8'}));
-	handles.edited_image = adaptive_thresh(handles.state_stack{handles.current_state}, 7, 7);
+	parameters = str2double(inputdlg({'Size of the kernel (odd integer)', 'Enhancement Parameter'}, 'Parameters', 1, {'7','7'}));
+	handles.edited_image = adaptive_thresh(handles.state_stack{handles.current_state}, parameters(1), parameters(2));
 	handles.current_state = handles.current_state + 1;
 	handles.state_stack{handles.current_state} = handles.edited_image;
 	guidata(hObject, handles);
@@ -277,8 +277,9 @@ function slider_blurness_CreateFcn(hObject, eventdata, handles)
 function slider_sharpness(hObject, eventdata, handles)
 	sliderVal = get(hObject,'Value');
 	sharpness_factor = sliderVal + 0.0001;
-	n = 11;
-	sig = 5;
+	sharpness_factor
+	n = 7;
+	sig = 2;
 	handles.edited_image = sharpen(handles.state_stack{handles.current_state}, n, sig, sharpness_factor);
 	guidata(hObject,handles);
 
@@ -286,14 +287,10 @@ function slider_sharpness(hObject, eventdata, handles)
 	imshow(handles.edited_image);
 
 function slider2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
+	if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+	    set(hObject,'BackgroundColor',[.9 .9 .9]);
+	end
 
 function calculate_dft(hObject, eventdata, handles)
 	handles.dft = dft2D(handles.state_stack{handles.current_state});
@@ -307,7 +304,6 @@ function calculate_dft(hObject, eventdata, handles)
 	imshow(handles.edited_image);
 
 
-% --- Executes on button press in radiobutton18.
 function dft_magnitude_save(hObject, eventdata, handles)
 	handles.edited_image = abs(handles.dft);
 	handles.edited_image = uint8(255*handles.edited_image/max(max(handles.edited_image)));
@@ -319,7 +315,6 @@ function dft_magnitude_save(hObject, eventdata, handles)
 	imshow(handles.edited_image);
 	
 
-% --- Executes on button press in radiobutton19.
 function dft_phase_save(hObject, eventdata, handles)
 	handles.edited_image = angle(handles.dft);
 	handles.edited_image = uint8(255*handles.edited_image/max(max(handles.edited_image)));
@@ -330,6 +325,50 @@ function dft_phase_save(hObject, eventdata, handles)
 	axes(handles.Edited_Image);
 	imshow(handles.edited_image);
 
-function freq_filt(hObject, eventdata, handles)
+function freq_filtering(hObject, eventdata, handles)
+	% All files are allowed
+	[File_Name, Path_Name] = uigetfile('*.*','File Selector');
+	image_path = strcat(Path_Name, File_Name);
+	
+	% Loading the image
+	handles.freq_mask = imread(image_path);
 
-	freq_filtering(orig_img, freq_mask)
+	% Applying the filter
+	handles.freq_filt = abs(handles.dft).*handles.freq_mask;
+
+	% Getting back the DFT for inversion
+	filtered_dft = handles.freq_filt.*exp(1i*phase);					% Polar to complex form
+	handles.idft = idft2D(filtered_dft);
+	
+	% Handling part of GUI
+	handles.current_state = handles.current_state + 1;
+	handles.edited_image = handles.idft;
+	handles.state_stack{handles.current_state} = handles.idft;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.freq_filt);
+
+
+function idft_save_freq_filt(hObject, eventdata, handles)
+	handles.edited_image = handles.freq_filt;
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+	
+
+function idft_save_enhanced_image(hObject, eventdata, handles)
+	handles.edited_image = handles.idft;
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+
+
+
+
