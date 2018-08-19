@@ -29,13 +29,13 @@ function [thresh_img] = adaptive_thresh(orig_img, n, C)
 			window = img_val(start_x:end_x, start_y:end_y);
 			
 			% Mean as a threshold
-			% thresh_img(i,j) = img_val(i,j) > (mean(mean(window))-C);
+			thresh_img(i,j) = img_val(i,j) > (mean(mean(window))-C);
 
 			% Median as a threshold
 			% thresh_img(i,j) = img_val(i,j) > (median(median(window))-C);
 
 			% Threshold using Otsu's method
-			thresh_img(i,j) = img_val(i,j) > (Otsu(window)-C);
+			% thresh_img(i,j) = img_val(i,j) > (Otsu(window)-C);
 
 		end
 	end
@@ -45,11 +45,11 @@ function [thresh_img] = adaptive_thresh(orig_img, n, C)
 	size(thresh_img)
 
 	% Displaying Images 
-	subplot(1,2,1)
-	imshow(orig_img);
-	title('Original Image');
-	subplot(1,2,2)
-	imshow(thresh_img);
-	title('Enhanced image');
+	% subplot(1,2,1)
+	% imshow(orig_img);
+	% title('Original Image');
+	% subplot(1,2,2)
+	% imshow(thresh_img);
+	% title('Enhanced image');
 	
 end

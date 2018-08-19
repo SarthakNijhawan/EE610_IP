@@ -22,7 +22,7 @@ function varargout = GUI_1(varargin)
 
 % Edit the above text to modify the response to help GUI_1
 
-% Last Modified by GUIDE v2.5 19-Aug-2018 04:31:11
+% Last Modified by GUIDE v2.5 19-Aug-2018 05:06:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -143,9 +143,6 @@ function save_image(hObject, eventdata, handles)
 function rotate(hObject, eventdata, handles)
 
 	angle_deg = str2double(inputdlg('Enter the angle in degrees','Angle-Theta',1,{'0'}));       %dialog box for angle of rotation
-	
-	% axes(handles.Original_Image);
-	% imshow(handles.state_stack{handles.current_state});
 
 	handles.edited_image = rotate_img(handles.state_stack{handles.current_state}, angle_deg);
 	handles.current_state = handles.current_state + 1;
@@ -207,7 +204,15 @@ function bit_plane_slicing(hObject, eventdata, handles)
 	imshow(handles.edited_image);
 
 function adaptive_thresholding(hObject, eventdata, handles)
-%%% TODO
+
+	% plane_number = str2double(inputdlg({'Plane Number (MSB:8 LSB:1)'}, 'Plane Number', 1, {'8'}));
+	handles.edited_image = adaptive_thresh(handles.state_stack{handles.current_state}, 7, 7);
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
 
 function flip_image(hObject, eventdata, handles)
 	handles.edited_image = flip_img(handles.state_stack{handles.current_state});
@@ -270,6 +275,15 @@ function slider_blurness_CreateFcn(hObject, eventdata, handles)
 	end
 
 function slider_sharpness(hObject, eventdata, handles)
+	sliderVal = get(hObject,'Value');
+	sharpness_factor = sliderVal + 0.0001;
+	n = 11;
+	sig = 5;
+	handles.edited_image = sharpen(handles.state_stack{handles.current_state}, n, sig, sharpness_factor);
+	guidata(hObject,handles);
+
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
 
 function slider2_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to slider2 (see GCBO)
@@ -280,3 +294,42 @@ function slider2_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+function calculate_dft(hObject, eventdata, handles)
+	handles.dft = dft2D(handles.state_stack{handles.current_state});
+	handles.current_state = handles.current_state + 1;
+	handles.edited_image = abs(handles.dft);
+	handles.edited_image = uint8(255*handles.edited_image/max(max(handles.edited_image)));
+	handles.state_stack{handles.current_state} = handles.dft;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+
+
+% --- Executes on button press in radiobutton18.
+function dft_magnitude_save(hObject, eventdata, handles)
+	handles.edited_image = abs(handles.dft);
+	handles.edited_image = uint8(255*handles.edited_image/max(max(handles.edited_image)));
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+	
+
+% --- Executes on button press in radiobutton19.
+function dft_phase_save(hObject, eventdata, handles)
+	handles.edited_image = angle(handles.dft);
+	handles.edited_image = uint8(255*handles.edited_image/max(max(handles.edited_image)));
+	handles.current_state = handles.current_state + 1;
+	handles.state_stack{handles.current_state} = handles.edited_image;
+	guidata(hObject, handles);
+	
+	axes(handles.Edited_Image);
+	imshow(handles.edited_image);
+
+function freq_filt(hObject, eventdata, handles)
+
+	freq_filtering(orig_img, freq_mask)

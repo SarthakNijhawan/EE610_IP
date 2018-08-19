@@ -1,4 +1,4 @@
-function [Output, mag, phase] = dft2D(orig_img)
+function [Output] = dft2D(orig_img)
 
 	% Input Parameters:
 	%		orig_img 	-> 	Original Input Image
@@ -39,22 +39,22 @@ function [Output, mag, phase] = dft2D(orig_img)
 		du=du+1;
 	end
 
-	mag = abs(Output);
-	phase = angle(Output);
+	% mag = abs(Output);
+	% phase = angle(Output);
 
-	mag = uint8(255*mag/max(max(mag)));
-	phase = uint8(255*phase/max(max(phase)));
+	% mag = uint8(255*mag/max(max(mag)));
+	% phase = uint8(255*phase/max(max(phase)));
 
 	% Displaying the images
-	subplot(1,3,1);
-	imshow(orig_img);
-	title('Original Image');
-	subplot(1,3,2)
-	imshow(mag);
-	title('Magnitude Plot');
-	subplot(1,3,3);
-	imshow(phase);
-	title('Phase Plot');
+	% subplot(1,3,1);
+	% imshow(orig_img);
+	% title('Original Image');
+	% subplot(1,3,2)
+	% imshow(mag);
+	% title('Magnitude Plot');
+	% subplot(1,3,3);
+	% imshow(phase);
+	% title('Phase Plot');
 
 	toc
 
