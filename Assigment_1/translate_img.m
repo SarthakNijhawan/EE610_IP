@@ -1,4 +1,4 @@
-function [translated_img] = translate_img(orig_img, x, y)
+function [translated_img] = translate_img(orig_img, x, y, mod_check)
 	% Input:
 	%       orig_img    -> Input Image
 	%       x           -> Translation in x-direction
@@ -19,6 +19,11 @@ function [translated_img] = translate_img(orig_img, x, y)
 
 		x1 = i + x;
 		y1 = j + y;
+
+		if mod_check
+			x1 = mod(i + x, M)+1;
+			y1 = mod(j + y, N)+1;
+		end
 
 		if (x1>=1 && y1>=1 && x1<=M && y1<=N)
 			if C == 1

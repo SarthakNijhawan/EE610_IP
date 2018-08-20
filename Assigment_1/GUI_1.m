@@ -184,7 +184,7 @@ function exit(hObject, eventdata, handles)
 function translation(hObject, eventdata, handles)
 
 	coordinate = str2double(inputdlg({'x-coordinate in pixels','y-coordinate in pixels'},'coordinates',1,{'0','0'}));
-	handles.edited_image = translate_img(handles.state_stack{handles.current_state}, coordinate(1), coordinate(2));
+	handles.edited_image = translate_img(handles.state_stack{handles.current_state}, coordinate(1), coordinate(2), 1);
 	handles.current_state = handles.current_state + 1;
 	handles.state_stack{handles.current_state} = handles.edited_image;
 	guidata(hObject, handles);
@@ -293,6 +293,7 @@ function slider2_CreateFcn(hObject, eventdata, handles)
 	end
 
 function calculate_dft(hObject, eventdata, handles)
+	handles.dft_image = handles.state_stack{handles.current_state};
 	handles.dft = dft2D(handles.state_stack{handles.current_state});
 	handles.current_state = handles.current_state + 1;
 	handles.edited_image = abs(handles.dft);
@@ -332,6 +333,7 @@ function freq_filtering(hObject, eventdata, handles)
 	
 	% Loading the image
 	handles.freq_mask = imread(image_path);
+	handles.freq_mask = handles.freq_mask/max(max(handles.freq_mask));
 
 	% Applying the filter
 	handles.freq_filt = abs(handles.dft).*handles.freq_mask;
@@ -340,6 +342,12 @@ function freq_filtering(hObject, eventdata, handles)
 	filtered_dft = handles.freq_filt.*exp(1i*phase);					% Polar to complex form
 	handles.idft = idft2D(filtered_dft);
 	
+	if ndims(handles.dft_image) == 3									% Colored Images
+		temp = rgb2hsv(handles.dft_image);
+		temp(:,:,3) = handles.idft/255;
+		handles.idft = uint8(255*hsv2rgb(temp));
+	end
+
 	% Handling part of GUI
 	handles.current_state = handles.current_state + 1;
 	handles.edited_image = handles.idft;
