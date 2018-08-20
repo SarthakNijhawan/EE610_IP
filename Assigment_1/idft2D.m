@@ -18,10 +18,10 @@ function [idft] = idft2D(orig_img)
 	% Shifting Centralised DFT back to origin
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Normal Wala %%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
-	% dft_img = orig_img;
+	dft_img = orig_img;
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Centralised Wala %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	dft_img = double(translate_img(orig_img, -ext_M, -ext_N, 1));
+	% dft_img = double(translate_img(orig_img, -ext_M, -ext_N, 1));
 
 	x_coord = [0:M-1];
 	y_coord = [0:N-1];
