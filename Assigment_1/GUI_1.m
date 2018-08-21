@@ -340,8 +340,11 @@ function freq_filtering(hObject, eventdata, handles)
 
 	% Getting back the DFT for inversion
 	filtered_dft = handles.freq_filt.*exp(1i*phase);					% Polar to complex form
-	handles.idft = idft2D(filtered_dft);
 	
+	%%% TODO %%%
+	% handles.idft = idft2D(filtered_dft);
+	handles.idft = ifft2(filtered_dft);
+
 	if ndims(handles.dft_image) == 3									% Colored Images
 		temp = rgb2hsv(handles.dft_image);
 		temp(:,:,3) = handles.idft/255;

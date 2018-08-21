@@ -43,6 +43,9 @@ function [enhanced_img] = sharpen(orig_img, n, sig, amount)
 		enhanced_img = uint8(enhanced_img);				% Casting the image back for b/w images
 	end
 	
+	% Perform Histogram Equalization to maintain the contrast
+	enhanced_img = equalize_hist(enhanced_img);
+
 	% Displaying images
 	% subplot(1,3,1);
 	% imshow(orig_img);
