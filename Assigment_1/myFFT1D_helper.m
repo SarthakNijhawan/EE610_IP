@@ -2,8 +2,8 @@ function [output] = myFFT1D_helper(input, N)
 	% Input:
 	%		input 		-> Input Sequence
 	% 		N 			-> Length of the sequence (Assumed to be a power of 2)
-	%		k 			-> Starting Index
 
+	% Base Case
 	if N == 2
 		% Do nothing since input(1) is already set
 		output = [input(1)+input(2), input(1)-input(2)];
@@ -21,6 +21,7 @@ function [output] = myFFT1D_helper(input, N)
 	u = 0:N/2-1;
 	w = exp(-1i*2*pi*u/N);
 
+	% Using the cyclicity; DFT(k) = DFT(k+N/2)
 	half1 = Ek + w.*Ok;
 	half2 = Ek - w.*Ok;
 

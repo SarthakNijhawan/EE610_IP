@@ -1,6 +1,6 @@
-function [thresh_img] = adaptive_thresh(orig_img, n, C)
+function [thresh_img] = adaptive_thresh(original_img, n, C)
 	% Input:
-	%       orig_img    -> Original Input Image
+	%       original_img    -> Original Input Image
 	% 		n 			-> Size of the kernel 
 	% 		C 			-> Constant parameter to enhance contrast
 	%
@@ -14,14 +14,14 @@ function [thresh_img] = adaptive_thresh(orig_img, n, C)
 	%		: Out of the 2 procedures (Mean-Median) we have shown only mean_filtering in GUI
 	%		  others can be shown ny uncommenting the respective ones.
 
-	if ndims(orig_img) == 3                     	% Colored Images
-		img_hsv = rgb2hsv(orig_img);
-		img_intensity = 255.0*img_hsv(:,:,3);       % To ensure range of value is in mapped to [0,255]
+	if ndims(original_img) == 3                     	% Colored Images
+		img_hsv = rgb2hsv(original_img);
+		img_intensity = 255.0*img_hsv(:,:,3);       	% To ensure range of value is in mapped to [0,255]
 	else
-		img_intensity = orig_img;                   % Grayscale Images
+		img_intensity = original_img;                   % Grayscale Images
 	end
 
-	ext = (n-1)/2;          						% an integer for odd integers
+	ext = (n-1)/2;          							% an integer for odd integers
 	[M,N] = size(img_intensity);
 	
 	% Locally thresholding the image (By window sliding method)
@@ -43,12 +43,12 @@ function [thresh_img] = adaptive_thresh(orig_img, n, C)
 
 		end
 	end
-	
+
 	thresh_img = uint8(255*thresh_img);
 
 	% % Displaying Images 
 	% subplot(1,2,1)
-	% imshow(orig_img);
+	% imshow(original_img);
 	% title('Original Image');
 	% subplot(1,2,2)
 	% imshow(thresh_img);

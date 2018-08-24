@@ -74,6 +74,10 @@ varargout{1} = handles.output;
 %%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
 %%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
 %%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
+%											GUI fucntions follow
+%%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
+%%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
+%%%%%%-------------------------------------------------------------------------------------------------------%%%%%%
 
 % Import an image
 function import_image(hObject, eventdata, handles)
@@ -221,7 +225,7 @@ function translation(hObject, eventdata, handles)
 	coordinate = str2double(inputdlg({'x-coordinate in pixels','y-coordinate in pixels'},'coordinates',1,{'0','0'}));
 	
 	% Translating the topmost image on the state-stack
-	handles.edited_image = translate_img(handles.state_stack{handles.current_state}, coordinate(1), coordinate(2), 1);
+	handles.edited_image = translate_img(handles.state_stack{handles.current_state}, coordinate(1), coordinate(2), 0);
 	
 	% Pushing the edited image to the top of the state-stack meant for the UNDO operation	
 	handles.current_state = handles.current_state + 1;
@@ -433,7 +437,6 @@ function dft_magnitude_save(hObject, eventdata, handles)
 	
 
 function dft_phase_save(hObject, eventdata, handles)
-
 	handles.edited_image = linear_contrast(angle(handles.dft));
 
 	% Pushing the edited image to the top of the state-stack meant for the UNDO operation	
@@ -472,22 +475,23 @@ function freq_filtering(hObject, eventdata, handles)
 	filtered_dft = fft_shift(filtered_dft);										% De-centralising the dft back
 
 	% Taking the inverse FFT
-	handles.idft = uint8(real(ifft2(filtered_dft)));
+	handles.idft = real(ifft2(filtered_dft));
 
 	% Handling the case for colored images
 	if ndims(handles.dft_img) == 3												% Colored Images
 		[M,N,C] = size(handles.dft_img);
 		handles.idft = handles.idft(1:M, 1:N);									% Carving out the original image back
 
-		temp = rgb2hsv(handles.dft_img);
-		temp(:,:,3) = handles.idft/255;
-		handles.idft = uint8(255*hsv2rgb(temp));
+		img_hsv = rgb2hsv(handles.dft_img);
+		img_hsv(:,:,3) = handles.idft/255;
+		handles.idft = uint8(255*hsv2rgb(img_hsv));
 	else 
 		[M,N] = size(handles.dft_img);
 		handles.idft = handles.idft(1:M, 1:N);									% Carving out the original image back
 	end
 
-	handles.edited_image = handles.idft;
+	% Enhancing the magnitude for display
+	handles.edited_image = linear_contrast(abs(handles.freq_filtered_mag));
 
 	% Pushing the edited image to the top of the state-stack meant for the UNDO operation	
 	handles.current_state = handles.current_state + 1;
@@ -497,13 +501,13 @@ function freq_filtering(hObject, eventdata, handles)
 	guidata(hObject, handles);
 	
 	axes(handles.Edited_Image);
-	imshow(handles.freq_filt);
+	imshow(handles.edited_image);
 
 
 function idft_save_freq_filt(hObject, eventdata, handles)
 	% Saves the (magnitude part) filtered dft on the top of the state stack
 
-	% Enhancing th magnitude for display
+	% Enhancing the magnitude for display
 	handles.edited_image = linear_contrast(abs(handles.freq_filtered_mag));
 
 	% Pushing the edited image to the top of the state-stack meant for the UNDO operation		
@@ -532,6 +536,7 @@ function idft_save_enhanced_image(hObject, eventdata, handles)
 	axes(handles.Edited_Image);
 	imshow(handles.edited_image);
 
+
 function apply_LPF(hObject, eventdata, handles)
 	% Applies a Low Pass Filter in 2D over the dft_img (Stored beforehand)
 	% Note: 
@@ -544,7 +549,7 @@ function apply_LPF(hObject, eventdata, handles)
 
 
 	% Reading the value of radius given as input
-	parameters = str2double(inputdlg({'Radius of LPF(in pixels'}, 'Parameters', 1, {'10'}));
+	parameters = str2double(inputdlg({'Radius of LPF (in pixels'}, 'Parameters', 1, {'20'}));
 	
 	% Constructing a frequency mask of the same size as the dft and given radius
 	handles.freq_mask = construct_LPF(parameters(1), size(handles.dft));
@@ -557,22 +562,23 @@ function apply_LPF(hObject, eventdata, handles)
 	filtered_dft = fft_shift(filtered_dft);										% De-centralising the dft back
 
 	% Taking the inverse FFT
-	handles.idft = uint8(real(ifft2(filtered_dft)));
+	handles.idft = real(ifft2(filtered_dft));
 
 	% Handling the case for colored images
 	if ndims(handles.dft_img) == 3												% Colored Images
 		[M,N,C] = size(handles.dft_img);
 		handles.idft = handles.idft(1:M, 1:N);									% Carving out the original image back
 
-		temp = rgb2hsv(handles.dft_img);
-		temp(:,:,3) = handles.idft/255;
-		handles.idft = uint8(255*hsv2rgb(temp));
+		img_hsv = rgb2hsv(handles.dft_img);
+		img_hsv(:,:,3) = handles.idft/255;
+		handles.idft = uint8(255*hsv2rgb(img_hsv));
 	else 
 		[M,N] = size(handles.dft_img);
 		handles.idft = handles.idft(1:M, 1:N);									% Carving out the original image back
 	end
 
-	handles.edited_image = handles.idft;
+	% Enhancing the magnitude for display
+	handles.edited_image = linear_contrast(abs(handles.freq_filtered_mag));
 
 	% Pushing the edited image to the top of the state-stack meant for the UNDO operation	
 	handles.current_state = handles.current_state + 1;
@@ -582,7 +588,7 @@ function apply_LPF(hObject, eventdata, handles)
 	guidata(hObject, handles);
 	
 	axes(handles.Edited_Image);
-	imshow(handles.freq_filt);
+	imshow(handles.edited_image);
 
 
 function apply_HPF(hObject, eventdata, handles)
@@ -595,9 +601,8 @@ function apply_HPF(hObject, eventdata, handles)
 	%		- freq_filtered_mag : Filtered mag response
 	% 		- filtered_img 		: IDFT of the filtered dft_img
 
-
 	% Reading the value of radius given as input
-	parameters = str2double(inputdlg({'Radius of HPF(in pixels'}, 'Parameters', 1, {'10'}));
+	parameters = str2double(inputdlg({'Radius of HPF (in pixels'}, 'Parameters', 1, {'20'}));
 	
 	% Constructing a frequency mask of the same size as the dft and given radius
 	handles.freq_mask = construct_HPF(parameters(1), size(handles.dft));
@@ -610,22 +615,23 @@ function apply_HPF(hObject, eventdata, handles)
 	filtered_dft = fft_shift(filtered_dft);										% De-centralising the dft back
 
 	% Taking the inverse FFT
-	handles.idft = uint8(real(ifft2(filtered_dft)));
+	handles.idft = real(ifft2(filtered_dft));
 
 	% Handling the case for colored images
 	if ndims(handles.dft_img) == 3												% Colored Images
 		[M,N,C] = size(handles.dft_img);
 		handles.idft = handles.idft(1:M, 1:N);									% Carving out the original image back
 
-		temp = rgb2hsv(handles.dft_img);
-		temp(:,:,3) = handles.idft/255;
-		handles.idft = uint8(255*hsv2rgb(temp));
+		img_hsv = rgb2hsv(handles.dft_img);
+		img_hsv(:,:,3) = handles.idft/255;
+		handles.idft = uint8(255*hsv2rgb(img_hsv));
 	else 
 		[M,N] = size(handles.dft_img);
 		handles.idft = handles.idft(1:M, 1:N);									% Carving out the original image back
 	end
 
-	handles.edited_image = handles.idft;
+	% Enhancing the magnitude for display
+	handles.edited_image = linear_contrast(abs(handles.freq_filtered_mag));
 
 	% Pushing the edited image to the top of the state-stack meant for the UNDO operation	
 	handles.current_state = handles.current_state + 1;
@@ -635,5 +641,4 @@ function apply_HPF(hObject, eventdata, handles)
 	guidata(hObject, handles);
 	
 	axes(handles.Edited_Image);
-	imshow(handles.freq_filt);
-
+	imshow(handles.edited_image);

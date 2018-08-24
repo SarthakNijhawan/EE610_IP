@@ -1,7 +1,8 @@
 function out_img = fft_shift(orig_img)
+	% Returns the centralised version of a DFT by swapping quadrants in frequency domain
+	% Based on the cyclic property of DFT
 
 	[M,N] = size(orig_img);
-
 	out_img = ones(M,N);
 
 	% Swapping 1st and 3rd quadrant

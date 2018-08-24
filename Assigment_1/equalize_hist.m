@@ -1,6 +1,6 @@
-function [enhanced_img] = equalize_hist(orig_img)
+function [enhanced_img] = equalize_hist(original_img)
 	% Input:
-	%       orig_img    -> Original Input Image
+	%       original_img    -> Original Input Image
 	%
 	% Output:
 	%		enhanced_img -> Histogram Equalized image 
@@ -9,11 +9,11 @@ function [enhanced_img] = equalize_hist(orig_img)
 	%		: All the operations are performed on the variable "img_intensity"
 	%       : For colored images the same algorithm is performed on the Value(V) plane in HSV
 
-	if ndims(orig_img) == 3								% Colored Images
-		img_hsv = rgb2hsv(orig_img);
+	if ndims(original_img) == 3								% Colored Images
+		img_hsv = rgb2hsv(original_img);
 		img_intensity = 255.0*img_hsv(:,:,3);			% To ensure range of value is in mapped to [0,255]
 	else
-		img_intensity = orig_img;						% Grayscale Images
+		img_intensity = original_img;						% Grayscale Images
 	end
 
 	L = 256;											% Number of levels in intensity
@@ -34,8 +34,7 @@ function [enhanced_img] = equalize_hist(orig_img)
 	% Final image
 	enhanced_img = (L-1)*cdf(img_intensity+1);
 
-
-	if ndims(orig_img) == 3								% Colored Images
+	if ndims(original_img) == 3							% Colored Images
 		img_hsv(:,:,3) = enhanced_img/(L-1);			% range for V in HSV must be in [0,1]
 		enhanced_img = uint8(255*hsv2rgb(img_hsv));
 	else 												% Grayscale Images
@@ -44,7 +43,7 @@ function [enhanced_img] = equalize_hist(orig_img)
 
 	% Displaying Images	
 	% subplot(1,2,1)
-	% imshow(orig_img);
+	% imshow(original_img);
 	% title('Original Image');
 	% subplot(1,2,2)
 	% imshow(enhanced_img);

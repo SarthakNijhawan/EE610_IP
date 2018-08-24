@@ -1,18 +1,27 @@
-function dft = myFFT2D(orignal_img)
-	
-	
+function dft = myFFT2D(original_img)
+	% Input:
+	%       original_img    -> Original Input Image
+	%
+	% Output:
+	%		 dft 		-> 2D DFT of the input image 
+	%
+	% Description:
+	%		: Calculates the centralised 2D DFT of the input image
+	%		: All the operations are performed on the variable "img_val"
+	%       : For colored images the same algorithm is performed on the Value(V) plane in HSV
+
 	tic
 
-	if ndims(orignal_img) == 3			% Colored Images
-		img_hsv = rgb2hsv(orignal_img);
+	if ndims(original_img) == 3			% Colored Images
+		img_hsv = rgb2hsv(original_img);
 		img_val = 255*img_hsv(:,:,3);
 	else
-		img_val = orignal_img;
+		img_val = original_img;
 	end
 	
 	[M,N] = size(img_val);
 
-	% Padding to ensure resolution of power 2	
+	% Padding to achieve resolution to the nearest power of 2	
 	M_pow2 = pow2(nextpow2(M));
 	N_pow2 = pow2(nextpow2(N));
 
@@ -38,8 +47,9 @@ function dft = myFFT2D(orignal_img)
 	% mag_im = fft_shift(mag);	
 
 	% Displaying Images
+	% figure
 	% subplot(1,2,1);
-	% imshow(orignal_img);
+	% imshow(original_img);
 	% title('Original Image');
 	% subplot(1,2,2)
 	% imshow(mag_im);
