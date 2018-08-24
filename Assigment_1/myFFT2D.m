@@ -1,5 +1,6 @@
 function dft = myFFT2D(orignal_img)
 	
+	
 	tic
 
 	if ndims(orignal_img) == 3			% Colored Images
@@ -32,12 +33,9 @@ function dft = myFFT2D(orignal_img)
 	end
 
 	%% Displaying the images
-	mag = abs(dft);
-	min_im = min(min(mag));
-	max_im = max(max(mag));
-	mag = uint8(255*(mag-min_im)/(max_im-min_im));
-
-	mag_im = fft_shift(mag);	
+	% mag = abs(dft);
+	% mag = linear_contrast(mag);
+	% mag_im = fft_shift(mag);	
 
 	% Displaying Images
 	% subplot(1,2,1);
