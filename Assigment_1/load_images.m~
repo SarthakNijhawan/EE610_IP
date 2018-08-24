@@ -22,4 +22,4 @@ adap_thresh4 = imread('images/adap_thresh4.jpg');
 dft_im = imread('images/dft1.png');
 dft_im = rgb2gray(dft_im);
 
-dft_im2 = imread('images/dft2.png');
+dft_img = imread('images/dft2.png');
