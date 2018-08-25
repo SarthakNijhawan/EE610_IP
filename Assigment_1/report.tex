@@ -1,0 +1,66 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Features}
+All the features are divided into two categories, based on their functionalities in the GUI:
+
+\subsection{Primary Features}
+
+\subsubsection{Histogram Equalization}
+It is a method to process images in order to adjust the contrast of an image by modifying the intensity distribution of the histogram. The objective of this technique is to give a linear trend to cumulative probability function associated to the image. And this trend allows the areas of lower local contrast to gain a higher contrast. This feature is used mostly for over or under-exposed images.
+\\
+
+\subsubsection{Log Transform}
+During log transformation, the dark pixels in an image are expanded as compare to the higher pixel compressed in log transformation.
+\\
+
+\subsubsection{Gamma Correction}
+This is non linear operation used to encode and decode luminance values in image where the non negative real input value is raised to the power and multiplied by a constant to get the output value. Gamma<1 signifies encoding gamma while Gamma>1 is corresponds to decoding gamma.
+\\
+
+\subsubsection{Adaptive Thresholding}
+This is used to segment an image by setting all pixels whose intensity values are above a threshold to a foreground value and all the remaining pixels to a background value. The threshold changes dynamically over the image.
+\\
+
+\subsubsection{Sharpening}
+The main purpose of sharpening is to highlight fine details in an image or to enhance detail that has been blurred, either in error or as a natural effect of a particular method of image acquisition. A blurred image is subtracted from the original image to detect any edges. A mask is then made with this edge detail. Contrast is then increased at the edges and the effect is applied to the original.
+\\
+
+\subsubsection{Geometric Transformation}
+This include four transformations - Rotation of image, Translation of image in both x and y direction, shearing of image from x and y direction and flipping the image.
+\\
+
+\subsubsection{Blurring}
+The blurring of an image is done by Gaussian blur function. This is widely used effect in graphics software, typically to reduce image noise, increase smoothness and reduce details.
+\\
+
+\subsubsection{Bit Plane Slicing}
+Bit Plane Slicing is done to highlight the contribution made to the total image appearance by specific bits. Each pixel can be represented by 8 bits. There are total of 8 planes. Plane 1 contains the least significant bit while the plane 8 contains most significant bit. It is done to analyze the relative importance of each bit of the image. Only the higher order bits i.e. top four, contains visually significant data.
+\\
+
+\subsubsection{2D-DFT}
+The two dimensional Discrete Fourier Transform for a image matrix is an important image processing tool which is used to decompose an image into its sine and cosine components. The output of the transformation represents the image in the frequency domain, while the input image is the spatial domain equivalent. In the Fourier domain image, each point represents a particular frequency contained in the spatial domain image.
+\\
+
+\subsubsection{Filter Domain Masking}
+The filtering in the spatial domain demands a filter mask. The filter mask is a matrix of odd usually size which is applied directly on the original data of the image. The mask is centered on each pixel of the initial image. For each position of the mask the pixel values of the image is multiplied by the corresponding values of the mask. The products of these multiplications are then added and the value of the central pixel of the original image is replaced by the sum. This must be repeated for every pixel in the image.
+\\
+
+\subsection{Secondary Features}
+\subsubsection{Import Image}
+This feature opens up a window asking for the image which we want to edit. A image of any format can be selected after going into the specific directory from where we want our picture to get imported.
+\\
+
+\subsubsection{Save Image}
+This feature is used to save the edited image. Pressing the push button opens a window where we can choose the folder at which we want the image to be saved. Entering ‘OK’ after giving a name to the image saves the image at the respective location.
+\\
+
+\subsubsection{Undo}
+This feature is used to reverse our last action on the edited image. As many as ‘n’ number of times undo can be done till the state reaches the initial state. In this GUI, last 50 actions can be recovered.
+\\
+
+\subsubsection{Reset}
+This feature brings us to the same state where we started, no matter how much of changes we have done on the image. It also put the all radio buttons and slider to their default positions and clear the array for undo.
+\\
+
+\subsubsection{Exit}
+This feature is used to quit the GUI window. On pressing this button the GUI window closes and all the changes are lost if not saved. And the command 
+\\
