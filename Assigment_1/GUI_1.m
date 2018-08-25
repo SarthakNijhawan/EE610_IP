@@ -487,7 +487,8 @@ function freq_filtering(hObject, eventdata, handles)
 		handles.idft = uint8(255*hsv2rgb(img_hsv));
 	else 
 		[M,N] = size(handles.dft_img);
-		handles.idft = handles.idft(1:M, 1:N);									% Carving out the original image back
+		handles.idft = uint8(handles.idft(1:M, 1:N));									% Carving out the original image back
+		% handles.idft = linear_contrast(handles.idft);
 	end
 
 	% Enhancing the magnitude for display
