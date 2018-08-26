@@ -34,9 +34,9 @@ function [thresh_img] = adaptive_thresh(original_img, n, C)
 			end_y = min(N, j+ext);
 			
 			window = img_intensity(start_x:end_x, start_y:end_y);
-			
+
 			% Mean-thresholding
-			thresh_img(i,j) = img_intensity(i,j) > (mean(mean(window))-C);
+			% thresh_img(i,j) = img_intensity(i,j) > (mean(mean(window))-C);
 
 			% Median-thresholding
 			% thresh_img(i,j) = img_intensity(i,j) > (median(median(window))-C);
