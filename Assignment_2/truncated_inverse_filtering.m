@@ -41,8 +41,8 @@ function filtered_img = tuncated_inverse_filtering(degraded_img, kernel, thresh,
 
 	%% Truncation Method
 	% radius = 80;
-	low_pass_filter = construct_LPF(radius, [M,N]);
-	reconstructed_img_DFT = abs(reconstructed_img_DFT).*low_pass_filter.*exp(1i*angle(reconstructed_img_DFT));
+	% low_pass_filter = construct_LPF(radius, [M,N]);
+	% reconstructed_img_DFT = abs(reconstructed_img_DFT).*low_pass_filter.*exp(1i*angle(reconstructed_img_DFT));
 
 	%% Take inverse FFT
 	reconstructed_img = uint8(abs(ifft2(fft_shift(reconstructed_img_DFT))));

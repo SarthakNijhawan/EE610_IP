@@ -7,9 +7,9 @@
 
 clear all
 
-
 % load image f
-load p64int.txt; f=p64int; clear p64int;
+f = double(rgb2gray(imread('images/lena_bw.png')));
+
 % create (-1)^(x+y) mask
 [m,n]=size(f); % image sizes
 mn=m*n; 
@@ -19,9 +19,9 @@ Ff=fft2(f.*tmp); % 2d FFT of f
 % note that fft2.m does not divid the result by mn, but ifft2.m does.
 
 % create blurring mask
-h=motionblur(45,5); % a 9 x 9 window of 45 degree motion blur
+h=motionblur(45,15); % a 9 x 9 window of 45 degree motion blur
 h=h/sum(sum(h));  % scale h so that its elements add to 1
-Hh=fft2(h.*tmp(1:size(h,1),1:size(h,2)),64,64); % append h to 64 by 64 and take 2d FFT
+Hh=fft2(h.*tmp(1:size(h,1),1:size(h,2)),m,n); % append h to 64 by 64 and take 2d FFT
 
 % generate noise
 % psnr = 20*log_10 256/sigma
@@ -29,7 +29,7 @@ Hh=fft2(h.*tmp(1:size(h,1),1:size(h,2)),64,64); % append h to 64 by 64 and take 
 psnr0=input('Peak-to-peak signal to noise ratio (PSNR, default = 30db) = ');
 if isempty(psnr0), psnr0=30; end
 sigma=255*10^(-psnr0/20);
-noise=randn(64)*sigma;  % gaussian noise with psnr = 30 dB
+noise=randn(m, n)*sigma;  % gaussian noise with psnr = 30 dB
 
 Gg0=Ff.*Hh;   % Fourier transform of the noiseless blurred image
 g=round(abs(ifft2(Gg0).*tmp)+noise); % blurred image + noise
