@@ -1,27 +1,24 @@
-% invfildemo.m
-% demonstration of inverse filter, wiener filters, and 
-% constrained least square filtering
-% (C) 2002 by Yu hen Hu
-% created: 10/10/2002
-% call motion blur
+% Author: Sarthak Nijhawan
+% 
+% Description:  This code is used to compare different image restoration techniques on set of
+%               images 
 
 clear all
 
-% load image f
-f = double(rgb2gray(imread('images/lena_bw.png')));
+img = imread('images/Blurry2_2.jpg');
+h = imread('images/kernel2_tiled.png');
+h = double(h)/sum(sum(h));
 
-% create (-1)^(x+y) mask
-[m,n]=size(f); % image sizes
-mn=m*n; 
-tmp=[1:m]'*ones(1,n)+ones(m,1)*[1:n];
-tmp=1-2*rem(tmp,2);
-Ff=fft2(f.*tmp); % 2d FFT of f
-% note that fft2.m does not divid the result by mn, but ifft2.m does.
+% h = fspecial('disk', 15);
 
-% create blurring mask
-h=motionblur(45,15); % a 9 x 9 window of 45 degree motion blur
-h=h/sum(sum(h));  % scale h so that its elements add to 1
-Hh=fft2(h.*tmp(1:size(h,1),1:size(h,2)),m,n); % append h to 64 by 64 and take 2d FFT
+% cam = im2double(rgb2gray(imread('images/lena_bw.png')));
+% hf = fft2(h, size(cam,1), size(cam,2));
+% cam_blur = real(ifft2(hf.*fft2(cam)));
+% sigma_u = 10^(-40/20)*abs(1-0);
+% img = cam_blur + sigma_u*randn(size(cam_blur));
+
+restore_img(img, h, 'clsf', 0.5);
+
 
 % generate noise
 % psnr = 20*log_10 256/sigma
@@ -138,4 +135,3 @@ figure(2),
 subplot(236),
 imagesc(hcls),title(['iteration ' int2str(icnt) ', gamma=' num2str(gamma)])
 colormap('gray')
-   

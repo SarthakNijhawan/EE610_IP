@@ -1,5 +1,7 @@
-img = imread('images/Blurry1_1.jpg');
-h = imread('images/kernel1_tiled.png');
+clear all
+
+img = imread('images/Blurry2_4.jpg');
+h = imread('images/kernel4_tiled.png');
 h = double(h)/sum(sum(h));
 
 % h = fspecial('disk', 15);
@@ -10,7 +12,7 @@ h = double(h)/sum(sum(h));
 % sigma_u = 10^(-40/20)*abs(1-0);
 % img = cam_blur + sigma_u*randn(size(cam_blur));
 
-restore_img(img, h, 'clsf', 0.01);
+restore_img(img, h, 'clsf', 0.3);
 
 % h = fspecial('disk', 15);
 
