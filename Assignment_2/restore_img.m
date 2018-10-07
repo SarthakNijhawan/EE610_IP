@@ -18,7 +18,8 @@ function reconstructed_img = restore_img(degraded_img, kernel, filter, arg)
 		degraded_img_intensity = degraded_img;						% Grayscale Images
 	end
 
-	[M,N] = size(degraded_img_intensity);							% P keeps track of the number of planes
+	[M,N] = size(degraded_img_intensity);							% Value Channel is in 2D
+	% degraded_img_intensity(1:50,1:50)
 
 	% Resize the kernel to match that of the degraded image
 	padded_kernel = pad_image(kernel, [M,N]);
@@ -57,13 +58,11 @@ function reconstructed_img = restore_img(degraded_img, kernel, filter, arg)
 	end
 
 	% Take inverse FFT
-	reconstructed_img = real(ifft2(fftshift(reconstructed_img_DFT)));
-	% reconstructed_img = linear_contrast(reconstructed_img);
-	
+	reconstructed_img = abs(ifft2(fftshift(reconstructed_img_DFT)));
+		
 	if ndims(degraded_img) == 3								% Colored Images
 		img_hsv(:,:,3) = reconstructed_img/255.0;			% range for V in HSV must be in [0,1]
 		reconstructed_img = uint8(255*hsv2rgb(img_hsv));
-		% reconstructed_img = hsv2rgb(img_hsv);
 	end
 
 	%% Display imgs

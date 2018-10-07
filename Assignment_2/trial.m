@@ -1,13 +1,14 @@
-% img = imread('images/Blurry1_1.jpg');
-% kernel = imread('images/kernel1_tiled.png');
+img = imread('images/Blurry1_1.jpg');
+h = imread('images/kernel1_tiled.png');
+h = double(h)/sum(sum(h));
 
-h = fspecial('disk', 15);
+% h = fspecial('disk', 15);
 
-cam = im2double(rgb2gray(imread('images/lena_bw.png')));
-hf = fft2(h, size(cam,1), size(cam,2));
-cam_blur = real(ifft2(hf.*fft2(cam)));
-sigma_u = 10^(-40/20)*abs(1-0);
-img = cam_blur + sigma_u*randn(size(cam_blur));
+% cam = im2double(rgb2gray(imread('images/lena_bw.png')));
+% hf = fft2(h, size(cam,1), size(cam,2));
+% cam_blur = real(ifft2(hf.*fft2(cam)));
+% sigma_u = 10^(-40/20)*abs(1-0);
+% img = cam_blur + sigma_u*randn(size(cam_blur));
 
 restore_img(img, h, 'clsf', 0.01);
 
