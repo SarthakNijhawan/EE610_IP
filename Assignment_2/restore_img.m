@@ -69,15 +69,15 @@ function reconstructed_img = restore_img(degraded_img, kernel, filter, arg)
 	end
 
 	%% Display imgs
-	figure
-	subplot(1,3,1);
-	imshow(degraded_img);
-	title('Degraded Image');
-	subplot(1,3,2)
-	imshow(log_transform(linear_contrast(abs(reconstructed_img_DFT))));
-	title('Reconstructed Image DFT');
-	subplot(1,3,3)
-	imshow(reconstructed_img);
-	title('Reconstructed Image')
+	% figure
+	% subplot(1,3,1);
+	% imshow(degraded_img);
+	% title('Degraded Image');
+	% subplot(1,3,2)
+	% imshow(log_transform(linear_contrast(abs(reconstructed_img_DFT))));
+	% title('Reconstructed Image DFT');
+	% subplot(1,3,3)
+	% imshow(reconstructed_img);
+	% title('Reconstructed Image')
 
 end
