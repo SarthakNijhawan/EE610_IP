@@ -87,7 +87,7 @@ while 1
 	end
 end
 
-disp('ISSSSHHHHSTOP!!!')
+disp('STOP!!!')
 pause
 
 % gamma = .001;
