@@ -1,7 +1,8 @@
 %% calculate_similarity: function description
-function [] = calculate_similarity(img1, img2)
-	ans = input('Enter 1 to display similarity metrics, else press any other key to skip : ');
-	if ~isempty(ans)
+function [] = calculate_similarity(img1, img2, name)
+	ans = input(strcat(['Do u wanna calculate similarity metrics for', name, ' ?y/n']), 's');
+	if ans == 'y' || ans == 'Y'
+		disp('Calculating.................');
 		m = immse(img1, img2);                 % MSE
 		p = psnr(img1, img2);                  % PSNR
 		s = ssim(img1, img2);                  % SSIM

@@ -30,3 +30,4 @@ blur4_2 = imread('images/Blurry1_2.jpg');
 blur4_3 = imread('images/Blurry1_3.jpg');
 blur4_4 = imread('images/Blurry1_4.jpg');
 
+g_part = imread('images/g_part.jpg');
