@@ -1,6 +1,6 @@
 function mysudokusolver(filename)
 %% Read in a file
-M = dlmread('SUDOKU_PUZZLE2.TXT');
+M = dlmread('SUDOKU_PUZZLE1.TXT');
   
 %% Show the initial state
 figure;
